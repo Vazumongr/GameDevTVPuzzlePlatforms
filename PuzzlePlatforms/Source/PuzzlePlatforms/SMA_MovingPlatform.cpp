@@ -29,26 +29,26 @@ void ASMA_MovingPlatform::Tick(float DeltaSeconds)
     Super::Tick(DeltaSeconds);
     if(HasAuthority())
     {
-        FVector Location = GetActorLocation();
-        
-        FVector Direction = (GlobalTargetLocation - GlobalStartLocation).GetSafeNormal();
-        float DistanceToTarget = FVector::Dist(GlobalTargetLocation, GlobalStartLocation);
-        float DistanceFromStart = FVector::Dist(Location, GlobalStartLocation);
+        if(ActiveTriggers > 0)
+            Move(DeltaSeconds);
+    }
+}
 
-        if(DistanceFromStart > DistanceToTarget)
-        {
-            FVector temp = GlobalTargetLocation;
-            GlobalTargetLocation = GlobalStartLocation;
-            GlobalStartLocation = temp;
-        }
+void ASMA_MovingPlatform::Move(float DeltaSeconds)
+{
+    FVector Location = GetActorLocation();
         
-        Location += Direction * DeltaSeconds * MovementSpeed;
-        SetActorLocation(Location);
+    FVector Direction = (GlobalTargetLocation - GlobalStartLocation).GetSafeNormal();
+    float DistanceToTarget = FVector::Dist(GlobalTargetLocation, GlobalStartLocation);
+    float DistanceFromStart = FVector::Dist(Location, GlobalStartLocation);
 
-        // if at target
-            // CurrentTarget = ToStart
-        // if at start
-            // CurrentTarget = ToTarget
+    if(DistanceFromStart > DistanceToTarget)
+    {
+        FVector temp = GlobalTargetLocation;
+        GlobalTargetLocation = GlobalStartLocation;
+        GlobalStartLocation = temp;
     }
     
+    Location += Direction * DeltaSeconds * MovementSpeed;
+    SetActorLocation(Location);
 }

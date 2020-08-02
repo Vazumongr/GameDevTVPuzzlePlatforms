@@ -20,16 +20,22 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick( float DeltaSeconds ) override;
 
+	FORCEINLINE void AddActiveTrigger()  { ActiveTriggers++; }
+	FORCEINLINE void RemoveActiveTrigger() { ActiveTriggers--; }
+
 private:
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, Category = "Setup", meta = (AllowPrivateAccess = "true"))
 	float MovementSpeed = 5.0f;
 	
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", MakeEditWidget = "true"))
+	UPROPERTY(EditAnywhere, Category = "Setup", meta = (AllowPrivateAccess = "true", MakeEditWidget = "true"))
 	FVector TargetLocation;
 
 	FVector GlobalTargetLocation;
 	FVector GlobalStartLocation;
 
-	enum Targets {ToTarget, ToStart} CurrentTarget;
+	UPROPERTY(EditAnywhere, Category = "Setup", meta = (AllowPrivateAccess = "true"))
+	int ActiveTriggers = 1;
+	
+	void Move(float DeltaSeconds);
 	
 };

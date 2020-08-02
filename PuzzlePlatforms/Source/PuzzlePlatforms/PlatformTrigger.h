@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SMA_MovingPlatform.h"
 #include "GameFramework/Actor.h"
 #include "PlatformTrigger.generated.h"
 
@@ -28,6 +29,9 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
     class UStaticMeshComponent* StaticMesh = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Setup", meta = (AllowPrivateAccess = "true"))
+	TArray<ASMA_MovingPlatform*> ConnectedPlatforms;
 
 	UFUNCTION()
 	void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
