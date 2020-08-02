@@ -22,5 +22,12 @@ public:
 	
 	UFUNCTION(Exec)
 	void Join(const FString& Address);
+
+	UFUNCTION(BlueprintCallable)
+	void LoadMenu();
+
+	TSubclassOf<class UUserWidget> MainMenuWidgetClass;
+
+	
 	
 };

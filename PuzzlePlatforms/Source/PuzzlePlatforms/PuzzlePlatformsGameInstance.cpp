@@ -2,15 +2,21 @@
 
 
 #include "PuzzlePlatformsGameInstance.h"
+#include "Blueprint/UserWidget.h"
 
 UPuzzlePlatformsGameInstance::UPuzzlePlatformsGameInstance(const FObjectInitializer& ObjectInitializer)
 {
     UE_LOG(LogTemp, Warning, TEXT("Constructed"));
+    ConstructorHelpers::FClassFinder<UUserWidget> MainMenuWidgetBP(TEXT("/Game/MenuSystem/WBP_MainMenu"));
+    if(!ensure(MainMenuWidgetBP.Class)) return;
+    MainMenuWidgetClass = MainMenuWidgetBP.Class;
+    
 }
 
 void UPuzzlePlatformsGameInstance::Init()
 {
-    UE_LOG(LogTemp, Warning, TEXT("Intialized"));
+    if(ensure(MainMenuWidgetClass))
+        UE_LOG(LogTemp, Warning, TEXT("Found class: %s"), *MainMenuWidgetClass->GetName());
 }
 
 void UPuzzlePlatformsGameInstance::Host()
@@ -35,4 +41,15 @@ void UPuzzlePlatformsGameInstance::Join(const FString& Address)
 
     PlayerController->ClientTravel(Address, ETravelType::TRAVEL_Absolute);
     
+}
+
+void UPuzzlePlatformsGameInstance::LoadMenu()
+{
+    if(ensure(MainMenuWidgetClass))
+    {
+        UUserWidget* MainMenuWidget = CreateWidget<UUserWidget>(this, MainMenuWidgetClass);
+        if(MainMenuWidget)
+            MainMenuWidget->AddToViewport();
+    }
+        
 }
