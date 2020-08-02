@@ -21,7 +21,15 @@ public:
 	virtual void Tick( float DeltaSeconds ) override;
 
 private:
-	UPROPERTY(EditAnywhere);
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	float MovementSpeed = 5.0f;
+	
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", MakeEditWidget = "true"))
+	FVector TargetLocation;
+
+	FVector GlobalTargetLocation;
+	FVector GlobalStartLocation;
+
+	enum Targets {ToTarget, ToStart} CurrentTarget;
 	
 };

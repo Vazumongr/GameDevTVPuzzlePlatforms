@@ -19,16 +19,36 @@ void ASMA_MovingPlatform::BeginPlay()
         SetReplicates(true);    // Means this is calculated on the server then send info to clients
         SetReplicateMovement(true); // Means this actors location is calculated on the server then send info to clients
     }
+
+    GlobalStartLocation = GetActorLocation();
+    GlobalTargetLocation = GetTransform().TransformPosition(TargetLocation);
 }
 
 void ASMA_MovingPlatform::Tick(float DeltaSeconds)
 {
+    Super::Tick(DeltaSeconds);
     if(HasAuthority())
     {
-        Super::Tick(DeltaSeconds);
         FVector Location = GetActorLocation();
-        Location += FVector(MovementSpeed * DeltaSeconds,0,0);
+        
+        FVector Direction = (GlobalTargetLocation - GlobalStartLocation).GetSafeNormal();
+        float DistanceToTarget = FVector::Dist(GlobalTargetLocation, GlobalStartLocation);
+        float DistanceFromStart = FVector::Dist(Location, GlobalStartLocation);
+
+        if(DistanceFromStart > DistanceToTarget)
+        {
+            FVector temp = GlobalTargetLocation;
+            GlobalTargetLocation = GlobalStartLocation;
+            GlobalStartLocation = temp;
+        }
+        
+        Location += Direction * DeltaSeconds * MovementSpeed;
         SetActorLocation(Location);
+
+        // if at target
+            // CurrentTarget = ToStart
+        // if at start
+            // CurrentTarget = ToTarget
     }
     
 }
