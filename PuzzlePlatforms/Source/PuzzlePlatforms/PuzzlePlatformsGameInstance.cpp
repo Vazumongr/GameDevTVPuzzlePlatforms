@@ -51,6 +51,7 @@ void UPuzzlePlatformsGameInstance::LoadMenu()
     if(!ensure(MainMenuWidget)) return;
         
     MainMenuWidget->AddToViewport();
+    MainMenuWidget->bIsFocusable = true;
         
     FInputModeUIOnly InputModeData;
     InputModeData.SetWidgetToFocus(MainMenuWidget->TakeWidget());
