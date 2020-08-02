@@ -3,8 +3,6 @@
 
 #include "MainMenu.h"
 
-#include "PuzzlePlatforms/PuzzlePlatformsGameInstance.h"
-
 
 bool UMainMenu::Initialize()
 {
@@ -21,13 +19,17 @@ bool UMainMenu::Initialize()
     return true;
 }
 
+void UMainMenu::SetMenuInterface(IMenuInterface* InMenuInterface)
+{
+    MenuInterface = InMenuInterface;
+}
+
 void UMainMenu::Host()
 {
-    UE_LOG(LogTemp, Warning, TEXT("Hosting..."));
+    if(!ensure(MenuInterface)) return;
+    MenuInterface->Host();
     
-    UPuzzlePlatformsGameInstance* GameInstance = Cast<UPuzzlePlatformsGameInstance>(GetGameInstance());
-    if(!ensure(GameInstance)) return;
-    GameInstance->Host();
+    UE_LOG(LogTemp, Warning, TEXT("Hosting..."));
 }
 
 void UMainMenu::Join()

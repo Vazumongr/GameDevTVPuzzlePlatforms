@@ -3,6 +3,7 @@
 
 #include "PuzzlePlatformsGameInstance.h"
 #include "Blueprint/UserWidget.h"
+#include "MenuSystem/MainMenu.h"
 
 UPuzzlePlatformsGameInstance::UPuzzlePlatformsGameInstance(const FObjectInitializer& ObjectInitializer)
 {
@@ -46,7 +47,7 @@ void UPuzzlePlatformsGameInstance::Join(const FString& Address)
 void UPuzzlePlatformsGameInstance::LoadMenu()
 {
     if(!ensure(MainMenuWidgetClass)) return;
-    UUserWidget* MainMenuWidget = CreateWidget<UUserWidget>(this, MainMenuWidgetClass);
+    UMainMenu* MainMenuWidget = CreateWidget<UMainMenu>(this, MainMenuWidgetClass);
         
     if(!ensure(MainMenuWidget)) return;
         
@@ -60,5 +61,6 @@ void UPuzzlePlatformsGameInstance::LoadMenu()
     APlayerController* PlayerController = GetFirstLocalPlayerController();
     PlayerController->SetInputMode(InputModeData);
     PlayerController->bShowMouseCursor = true;
-    
+
+    MainMenuWidget->SetMenuInterface(this);
 }
