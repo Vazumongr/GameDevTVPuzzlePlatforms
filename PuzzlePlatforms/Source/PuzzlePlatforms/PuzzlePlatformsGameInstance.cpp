@@ -45,11 +45,19 @@ void UPuzzlePlatformsGameInstance::Join(const FString& Address)
 
 void UPuzzlePlatformsGameInstance::LoadMenu()
 {
-    if(ensure(MainMenuWidgetClass))
-    {
-        UUserWidget* MainMenuWidget = CreateWidget<UUserWidget>(this, MainMenuWidgetClass);
-        if(MainMenuWidget)
-            MainMenuWidget->AddToViewport();
-    }
+    if(!ensure(MainMenuWidgetClass)) return;
+    UUserWidget* MainMenuWidget = CreateWidget<UUserWidget>(this, MainMenuWidgetClass);
         
+    if(!ensure(MainMenuWidget)) return;
+        
+    MainMenuWidget->AddToViewport();
+        
+    FInputModeUIOnly InputModeData;
+    InputModeData.SetWidgetToFocus(MainMenuWidget->TakeWidget());
+    InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+
+    APlayerController* PlayerController = GetFirstLocalPlayerController();
+    PlayerController->SetInputMode(InputModeData);
+    PlayerController->bShowMouseCursor = true;
+    
 }
