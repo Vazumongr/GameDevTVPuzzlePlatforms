@@ -21,7 +21,7 @@ void UPuzzlePlatformsGameInstance::Init()
 }
 
 void UPuzzlePlatformsGameInstance::Host()
-{
+{   
     UEngine* Engine = GetEngine();
     if(!ensure(Engine != nullptr)) return;
     
@@ -47,20 +47,11 @@ void UPuzzlePlatformsGameInstance::Join(const FString& Address)
 void UPuzzlePlatformsGameInstance::LoadMenu()
 {
     if(!ensure(MainMenuWidgetClass)) return;
-    UMainMenu* MainMenuWidget = CreateWidget<UMainMenu>(this, MainMenuWidgetClass);
+    MainMenuWidget = CreateWidget<UMainMenu>(this, MainMenuWidgetClass);
         
     if(!ensure(MainMenuWidget)) return;
-        
-    MainMenuWidget->AddToViewport();
-    MainMenuWidget->bIsFocusable = true;
-        
-    FInputModeUIOnly InputModeData;
-    InputModeData.SetWidgetToFocus(MainMenuWidget->TakeWidget());
-    InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
 
-    APlayerController* PlayerController = GetFirstLocalPlayerController();
-    PlayerController->SetInputMode(InputModeData);
-    PlayerController->bShowMouseCursor = true;
-
+    MainMenuWidget->Setup();
+    
     MainMenuWidget->SetMenuInterface(this);
 }

@@ -1,0 +1,3 @@
+"C:\Program Files\Epic Games\UE_4.25\Engine\Binaries\Win64\UE4Editor.exe" "C:\Users\troy\Documents\Repositories\Githubslabs\GameDevTVPuzzlePlatforms\PuzzlePlatforms\PuzzlePlatforms.uproject" -server -log
+
+"C:\Program Files\Epic Games\UE_4.25\Engine\Binaries\Win64\UE4Editor.exe" "C:\Users\troy\Documents\Repositories\Githubslabs\GameDevTVPuzzlePlatforms\PuzzlePlatforms\PuzzlePlatforms.uproject" 10.0.0.9:7777 -game -log
