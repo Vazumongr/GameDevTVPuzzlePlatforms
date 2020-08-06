@@ -3,7 +3,7 @@
 
 #include "MainMenu.h"
 #include "Components/WidgetSwitcher.h"
-#include "Components/VerticalBox.h"
+#include "Components/EditableTextBox.h"
 
 
 bool UMainMenu::Initialize()
@@ -20,56 +20,24 @@ bool UMainMenu::Initialize()
     
     if(!ensure(BackButton)) return false;
     BackButton->OnClicked.AddDynamic(this, &UMainMenu::GoBack);
+    
+    if(!ensure(ConnectButton)) return false;
+    ConnectButton->OnClicked.AddDynamic(this, &UMainMenu::ConnectToGame);
+    
+    if(!ensure(QuitButton)) return false;
+    QuitButton->OnClicked.AddDynamic(this, &UMainMenu::QuitGame);
 
     return true;
 }
-
-void UMainMenu::SetMenuInterface(IMenuInterface* InMenuInterface)
-{
-    MenuInterface = InMenuInterface;
-}
-
-void UMainMenu::Setup()
-{
-    this->AddToViewport();
-    this->bIsFocusable = true;
-    
-    FInputModeUIOnly InputModeData;
-    InputModeData.SetWidgetToFocus(this->TakeWidget());
-    InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-
-    UWorld* World = GetWorld();
-    if(!ensure(World)) return;
-    
-    APlayerController* PlayerController = World->GetFirstPlayerController();
-    if(!ensure(PlayerController)) return;
-    
-    PlayerController->SetInputMode(InputModeData);
-    PlayerController->bShowMouseCursor = true;
-}
-
 void UMainMenu::OnLevelRemovedFromWorld(ULevel* InLevel, UWorld* InWorld)
 {
-    FInputModeGameOnly InputModeData;
-    InputModeData.SetConsumeCaptureMouseDown(false);
-
-    if(!ensure(InWorld)) return;
-    
-    APlayerController* PlayerController = InWorld->GetFirstPlayerController();
-    if(!ensure(PlayerController)) return;
-    
-    PlayerController->SetInputMode(InputModeData);
-    PlayerController->bShowMouseCursor = false;
-    
-    this->RemoveFromViewport();
+    TearDown();
 }
 
 void UMainMenu::Host()
 {
     if(!ensure(MenuInterface)) return;
     MenuInterface->Host();
-    
-    UE_LOG(LogTemp, Warning, TEXT("Hosting..."));
 }
 
 void UMainMenu::OpenJoinMenu()
@@ -87,4 +55,25 @@ void UMainMenu::GoBack()
     {
         MenuSwitcher->SetActiveWidget(MainMenu);
     }
+}
+
+void UMainMenu::ConnectToGame()
+{
+    if(!ensure(InputIPBox)) return;
+    
+    FString IPAddress = InputIPBox->GetText().ToString();
+    
+    if(ensure(MenuInterface))
+        MenuInterface->Join(IPAddress);
+}
+
+void UMainMenu::QuitGame()
+{
+    UWorld* World = GetWorld();
+    if(!ensure(World)) return;
+
+    APlayerController* PlayerController = World->GetFirstPlayerController();
+    if(!ensure(PlayerController)) return;
+
+    PlayerController->ConsoleCommand(TEXT("quit"));
 }
