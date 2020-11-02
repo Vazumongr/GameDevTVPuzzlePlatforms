@@ -38,11 +38,11 @@ void UMenuWidget::TearDown()
     InputModeData.SetConsumeCaptureMouseDown(false);
 
     UWorld* World = GetWorld();
-
     if(!ensure(World)) return;
+    
     APlayerController* PlayerController = World->GetFirstPlayerController();
-
     if(!ensure(PlayerController)) return;
+    
     PlayerController->SetInputMode(InputModeData);
     PlayerController->bShowMouseCursor = false;
     
